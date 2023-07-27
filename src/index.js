@@ -44,6 +44,11 @@ $("#closeModal").addEventListener("click", () => {
     $(".modal-wrapper").classList.remove("grid");
 });
 
+$("#add_btn").addEventListener("click", () => {
+	$(".modal-wrapper").classList.add("grid");
+	$(".modal-wrapper").classList.remove("hidden");
+});
+
 // ----------------- modal actions end --------------------
 
 // -------------------- authorization actions  --------------------
@@ -121,10 +126,13 @@ function authChek() {
         $(".menu").classList.remove("hidden");
         $("#openModal").classList.add("hidden");
         $("#user_info").textContent = localStorage.getItem("username");
+        $('#auth').classList.add('hidden');
     } else {
+        $('#auth').classList.remove('hidden');
         $(".menu").classList.add("hidden");
         $(".dropdown").classList.add("hidden");
         $("#openModal").classList.remove("hidden");
+        $('#addpost').classList.add('hidden');
     }
 }
 
@@ -139,3 +147,36 @@ $("#logout").addEventListener("click", () => {
     location.reload();
 });
 
+
+
+// -----------------    BLOG POST   ---------------------
+
+function addPost(){
+    const newBlog = {
+        title: $("#blog_title").value,
+        body: $("#blog_text").value,
+        user_id: localStorage.getItem('user'),
+    };
+
+
+
+    if (newBlog.title.trim().length === 0 || newBlog.body.trim().length === 0){
+        alert("Please fill post title and body");
+    }
+    else{
+        fetch(`https://nest-blog-qdsa.onrender.com/api/blog`,{
+            method: "POST",
+            headers: {
+                "Content-Type" : "application/json",
+                Authorization: `Bearer $localStorage.getItem("token)}`,
+            },
+            body: JSON.stringify(newBlog),
+        })
+        .then((res)=> res.json())
+        .then((res)=> console.log(res))
+    }
+}
+
+$('#save').addEventListener('click',()=>{
+    addPost()
+});
